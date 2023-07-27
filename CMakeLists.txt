@@ -88,4 +88,10 @@ install(TARGETS zdepth DESTINATION ${CMAKE_INSTALL_LIBDIR})
 add_executable(zdepth_test tests/zdepth_test.cpp)
 target_link_libraries(zdepth_test PRIVATE zdepth)
 
+if (BUILD_SHARED_LIBS)
+  target_link_libraries(zdepth_test PUBLIC zstd::libzstd_shared)
+else()
+  target_link_libraries(zdepth_test PUBLIC zstd::libzstd_static)
+endif()
+
 
