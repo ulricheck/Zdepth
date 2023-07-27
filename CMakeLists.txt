@@ -37,7 +37,7 @@ endif()
 # Subprojects
 
 if (NOT TARGET zstd)
-    add_subdirectory(zstd zstd)
+    add_subdirectory(zstd)
 endif()
 
 
@@ -80,24 +80,31 @@ target_link_libraries(zdepth_test PRIVATE zdepth)
 ################################################################################
 # Install
 
-install(FILES LICENSE DESTINATION ".")
-install(FILES README.md DESTINATION ".")
-install(FILES ${INCLUDE_FILES} DESTINATION include)
+install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES README.md DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(DIRECTORY cmake include DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS zdepth EXPORT zdepth LIBRARY DESTINATION lib)
 
-# Disable the rest of this because it does not seem to work on Linux
-return()
+################################################################################
+# Generate zdepthConfig.cmake and zdepthConfigVersion.cmake for cmake projects
 
-install(
-    TARGETS
-        zdepth
-        zstd
-    EXPORT
-        zdepth-targets
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
+set(export_dest_dir "lib/cmake/zdepth")
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    zdepthConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    )
 
-install(FILES cmake/zdepth-config.cmake DESTINATION cmake)
-install(FILES cmake/zdepth-config-version.cmake DESTINATION cmake)
-install(EXPORT zdepth-targets DESTINATION cmake)
-install(FILES "$<TARGET_FILE:zdepth>" DESTINATION lib)
+export(TARGETS zdepth zstd
+    NAMESPACE zdepth::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/zdepthConfig.cmake")
+
+install(EXPORT zdepth
+        DESTINATION ${export_dest_dir}
+        NAMESPACE zdepth::
+        FILE zdepthConfig.cmake)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zdepthConfigVersion.cmake"
+        DESTINATION "${export_dest_dir}"
+        )

@@ -143,7 +143,8 @@ inline int DecodeVLE(int* &pBuffer, int& word, int& nibblesWritten)
 
 int CompressRVL(short* input, char* output, int numPixels)
 {
-    int word, nibblesWritten;
+    int word{ 0 };
+    int nibblesWritten;
     int *pBuffer;
     int *buffer = pBuffer = (int*)output;
     nibblesWritten = 0;
@@ -175,8 +176,7 @@ int CompressRVL(short* input, char* output, int numPixels)
 void DecompressRVL(char* input, short* output, int numPixels)
 {
     int word, nibblesWritten;
-    int *pBuffer;
-    int *buffer = pBuffer = (int*)input;
+    int *pBuffer = (int*)input;
     nibblesWritten = 0;
     short current, previous = 0;
     int numPixelsToDecode = numPixels;
@@ -193,7 +193,7 @@ void DecompressRVL(char* input, short* output, int numPixels)
         {
             int positive = DecodeVLE(pBuffer, word, nibblesWritten); // nonzero value
             int delta = (positive >> 1) ^ -(positive & 1);
-            current = previous + delta;
+            current = previous + static_cast<short>(delta);
             *output++ = current;
             previous = current;
         }
@@ -218,6 +218,9 @@ static zdepth::DepthCompressor compressor, decompressor;
 bool TestFrame(const uint16_t* frame, bool keyframe)
 {
     std::vector<uint8_t> compressed;
+
+    static_assert(Width % kBlockSize == 0, "Width is not a multiple of block size.");
+    static_assert(Height % kBlockSize == 0, "Height is not a multiple of block size.");
 
     const uint64_t t0 = GetTimeUsec();
 
@@ -251,7 +254,7 @@ bool TestFrame(const uint16_t* frame, bool keyframe)
 
     const unsigned original_bytes = Width * Height * 2;
     cout << endl;
-    cout << "Zdepth Compression: " << original_bytes << " bytes -> " << compressed.size() << 
+    cout << "Zdepth Compression: " << original_bytes << " bytes -> " << compressed.size() <<
         " bytes (ratio = " << original_bytes / (float)compressed.size() << ":1) ("
         << (compressed.size() * 30 * 8) / 1000000.f << " Mbps @ 30 FPS)" << endl;
     cout << "Zdepth Speed: Compressed in " << (t1 - t0) / 1000.f << " msec. Decompressed in " << (t2 - t1) / 1000.f << " msec" << endl;
@@ -272,7 +275,7 @@ bool TestFrame(const uint16_t* frame, bool keyframe)
     const uint64_t t5 = GetTimeUsec();
     ZstdCompress(compressed, recompressed);
     const uint64_t t6 = GetTimeUsec();
-    ZstdDecompress(recompressed.data(), recompressed.size(), compressed.size(), decompressed);
+    ZstdDecompress(recompressed.data(), static_cast<int>(recompressed.size()), static_cast<int>(compressed.size()), decompressed);
     const uint64_t t7 = GetTimeUsec();
     quantized.resize(n * 2);
     DecompressRVL((char*)decompressed.data(), (short*)quantized.data(), n);
@@ -287,13 +290,13 @@ bool TestFrame(const uint16_t* frame, bool keyframe)
     }
 
     cout << endl;
-    cout << "Quantization+RVL Compression: " << original_bytes << " bytes -> " << compressed.size() << 
+    cout << "Quantization+RVL Compression: " << original_bytes << " bytes -> " << compressed.size() <<
         " bytes (ratio = " << original_bytes / (float)compressed.size() << ":1) ("
         << (compressed.size() * 30 * 8) / 1000000.f << " Mbps @ 30 FPS)" << endl;
     cout << "Quantization+RVL Speed: Compressed in " << (t4 - t3) / 1000.f << " msec. Decompressed in " << (t8 - t7) / 1000.f << " msec" << endl;
 
     cout << endl;
-    cout << "Quantization+RVL+Zstd Compression: " << original_bytes << " bytes -> " << recompressed.size() << 
+    cout << "Quantization+RVL+Zstd Compression: " << original_bytes << " bytes -> " << recompressed.size() <<
         " bytes (ratio = " << original_bytes / (float)recompressed.size() << ":1) ("
         << (recompressed.size() * 30 * 8) / 1000000.f << " Mbps @ 30 FPS)" << endl;
     cout << "Quantization+RVL+Zstd Speed: Compressed in " << (t6 - t5 + t4 - t3) / 1000.f << " msec. Decompressed in " << (t8 - t6) / 1000.f << " msec" << endl;
