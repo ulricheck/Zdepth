@@ -41,6 +41,17 @@
     #define DEPTH_ALIGNED_ACCESSES
 #endif // ANDROID
 
+
+#ifdef _WIN32
+#   ifdef ZDEPTH_DLL
+#       define ZDEPTH_EXPORT __declspec( dllexport )
+#   else
+#       define ZDEPTH_EXPORT __declspec( dllimport )
+#   endif
+#else // _WIN32
+#   define ZDEPTH_EXPORT
+#endif
+
 namespace zdepth {
 
 
@@ -264,7 +275,7 @@ void Unpack12(
 //------------------------------------------------------------------------------
 // DepthCompressor
 
-class DepthCompressor
+class ZDEPTH_EXPORT DepthCompressor
 {
 public:
     // Compress depth array to buffer
