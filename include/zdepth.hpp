@@ -107,7 +107,7 @@ enum class DepthResult
     Success
 };
 
-const char* DepthResultString(DepthResult result);
+const char* ZDEPTH_EXPORT DepthResultString(DepthResult result);
 
 
 //------------------------------------------------------------------------------
@@ -166,8 +166,8 @@ DEPTH_INLINE void WriteU32_LE(void* data, uint32_t value)
 }
 
 
-bool IsDepthFrame(const uint8_t* file_data, unsigned file_bytes);
-bool IsKeyFrame(const uint8_t* file_data, unsigned file_bytes);
+bool ZDEPTH_EXPORT IsDepthFrame(const uint8_t* file_data, unsigned file_bytes);
+bool ZDEPTH_EXPORT IsKeyFrame(const uint8_t* file_data, unsigned file_bytes);
 
 
 //------------------------------------------------------------------------------
@@ -210,18 +210,18 @@ bool IsKeyFrame(const uint8_t* file_data, unsigned file_bytes);
 */
 
 // Quantize depth from 200..11840 mm to a value from 0..2040
-uint16_t AzureKinectQuantizeDepth(uint16_t depth);
+uint16_t ZDEPTH_EXPORT AzureKinectQuantizeDepth(uint16_t depth);
 
 // Reverse quantization back to original depth
-uint16_t AzureKinectDequantizeDepth(uint16_t quantized);
+uint16_t ZDEPTH_EXPORT AzureKinectDequantizeDepth(uint16_t quantized);
 
 // Quantize depth for a whole image
-void QuantizeDepthImage(
+void ZDEPTH_EXPORT QuantizeDepthImage(
     int width,
     int height,
     const uint16_t* depth,
     std::vector<uint16_t>& quantized);
-void DequantizeDepthImage(
+void ZDEPTH_EXPORT DequantizeDepthImage(
     int width,
     int height,
     const uint16_t* quantized,
@@ -231,11 +231,11 @@ void DequantizeDepthImage(
 //------------------------------------------------------------------------------
 // Zstd
 
-void ZstdCompress(
+void ZDEPTH_EXPORT ZstdCompress(
     const std::vector<uint8_t>& uncompressed,
     std::vector<uint8_t>& compressed);
 
-bool ZstdDecompress(
+bool ZDEPTH_EXPORT ZstdDecompress(
     const uint8_t* compressed_data,
     int compressed_bytes,
     int uncompressed_bytes,
@@ -263,11 +263,11 @@ void Pad12(std::vector<uint16_t>& data);
 
 // Pack 12-bit fields into bytes for Zstd compression.
 // Input must be a multiple of two in size
-void Pack12(
+void ZDEPTH_EXPORT Pack12(
     const std::vector<uint16_t>& data,
     std::vector<uint8_t>& packed);
 
-void Unpack12(
+void ZDEPTH_EXPORT Unpack12(
     const std::vector<uint8_t>& packed,
     std::vector<uint16_t>& data);
 
