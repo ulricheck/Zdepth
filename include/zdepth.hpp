@@ -107,7 +107,7 @@ enum class DepthResult
     Success
 };
 
-const char* ZDEPTH_EXPORT __cdecl DepthResultString(DepthResult result);
+ZDEPTH_EXPORT const char* DepthResultString(DepthResult result);
 
 
 //------------------------------------------------------------------------------
