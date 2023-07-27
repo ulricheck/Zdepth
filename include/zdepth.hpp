@@ -107,7 +107,7 @@ enum class DepthResult
     Success
 };
 
-const char* ZDEPTH_EXPORT DepthResultString(DepthResult result);
+const char* DepthResultString(DepthResult result);
 
 
 //------------------------------------------------------------------------------
@@ -259,7 +259,7 @@ bool ZDEPTH_EXPORT ZstdDecompress(
 */
 
 // Pad data with a zero entry to make its length even
-void Pad12(std::vector<uint16_t>& data);
+void ZDEPTH_EXPORT Pad12(std::vector<uint16_t>& data);
 
 // Pack 12-bit fields into bytes for Zstd compression.
 // Input must be a multiple of two in size
