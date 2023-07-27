@@ -76,11 +76,15 @@ target_include_directories(zdepth PUBLIC
 ################################################################################
 # Install
 
+install(TARGETS zdepth EXPORT zdepthConfig
+        ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})  # This is for Windows
+
 install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES README.md DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY cmake DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES include/zdepth.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(TARGETS zdepth DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 
 # zdepth test application
