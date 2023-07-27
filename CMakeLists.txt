@@ -3,6 +3,7 @@ project(zdepth LANGUAGES CXX)
 include("cmake/zdepth-config-version.cmake")
 set(CMAKE_CXX_STANDARD 11)
 
+include(GNUInstallDirs)
 
 ################################################################################
 # Build Options
@@ -84,13 +85,14 @@ target_link_libraries(zdepth_test PRIVATE zdepth)
 
 install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES README.md DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(DIRECTORY cmake include DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(TARGETS zdepth EXPORT zdepth LIBRARY DESTINATION lib)
+install(DIRECTORY cmake DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS zdepth DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 ################################################################################
 # Generate zdepthConfig.cmake and zdepthConfigVersion.cmake for cmake projects
 
-set(export_dest_dir "lib/cmake/zdepth")
+set(export_dest_dir "${CMAKE_INSTALL_LIBDIR}/cmake/zdepth")
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zdepthConfigVersion.cmake
