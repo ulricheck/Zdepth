@@ -94,7 +94,7 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
     )
 
-export(TARGETS zdepth zstd
+export(TARGETS zdepth
     NAMESPACE zdepth::
     FILE "${CMAKE_CURRENT_BINARY_DIR}/zdepthConfig.cmake")
 
