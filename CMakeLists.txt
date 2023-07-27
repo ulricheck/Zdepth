@@ -96,6 +96,7 @@ target_link_libraries(zdepth_test PRIVATE zdepth)
 if (BUILD_SHARED_LIBS)
   target_link_libraries(zdepth_test PUBLIC zstd::libzstd_shared)
 else()
+  set_target_properties(zdepth_test PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_BUILD_STATIC")
   target_link_libraries(zdepth_test PUBLIC zstd::libzstd_static)
 endif()
 
