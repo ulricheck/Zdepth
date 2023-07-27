@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 project(zdepth LANGUAGES CXX)
 include("cmake/zdepth-config-version.cmake")
 set(CMAKE_CXX_STANDARD 11)
@@ -52,8 +52,6 @@ set(SOURCE_FILES
     src/zdepth.cpp
 )
 
-include_directories(include)
-
 
 ################################################################################
 # Targets
@@ -70,19 +68,10 @@ else()
   target_link_libraries(zdepth PUBLIC zstd::libzstd_static)
 endif()
 
-
 target_include_directories(zdepth PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include>"
 )
-
-
-
-# zdepth test application
-
-add_executable(zdepth_test tests/zdepth_test.cpp)
-target_link_libraries(zdepth_test PRIVATE zdepth)
-
 
 ################################################################################
 # Install
@@ -92,3 +81,11 @@ install(FILES README.md DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY cmake DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(TARGETS zdepth DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+
+# zdepth test application
+
+add_executable(zdepth_test tests/zdepth_test.cpp)
+target_link_libraries(zdepth_test PRIVATE zdepth)
+
+
