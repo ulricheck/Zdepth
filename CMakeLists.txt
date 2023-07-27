@@ -59,10 +59,10 @@ include_directories(include)
 
 # zdepth library
 
-add_library(zdepth STATIC ${SOURCE_FILES})
+add_library(zdepth ${SOURCE_FILES})
 add_library(zdepth::zdepth ALIAS zdepth)
 
-target_link_libraries(zdepth PUBLIC zstd)
+target_link_libraries(zdepth PUBLIC zstd::zstd)
 
 target_include_directories(zdepth PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
