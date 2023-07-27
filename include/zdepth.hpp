@@ -42,15 +42,45 @@
 #endif // ANDROID
 
 
+
 #ifdef _WIN32
-#   ifdef ZDEPTH_DLL
-#       define ZDEPTH_EXPORT __declspec( dllexport )
-#   else
-#       define ZDEPTH_EXPORT __declspec( dllimport )
-#   endif
-#else // _WIN32
-#   define ZDEPTH_EXPORT
+#define ZDEPTH_VISIBILITY_EXPORT __declspec(dllexport)
+#else
+#define ZDEPTH_VISIBILITY_EXPORT __attribute__((visibility("default")))
 #endif
+
+#ifdef _WIN32
+#define ZDEPTH_VISIBILITY_INLINE_MEMBER_EXPORT
+#else
+#define ZDEPTH_VISIBILITY_INLINE_MEMBER_EXPORT __attribute__((visibility("default")))
+#endif
+
+#ifdef _WIN32
+#define ZDEPTH_VISIBILITY_IMPORT __declspec(dllimport)
+#else
+#define ZDEPTH_VISIBILITY_IMPORT __attribute__((visibility("default")))
+#endif
+
+#define ZDEPTH_VISIBILITY_STATIC
+
+#ifdef _WIN32
+#define ZDEPTH_VISIBILITY_LOCAL
+#else
+#define ZDEPTH_VISIBILITY_LOCAL __attribute__((visibility("hidden")))
+#endif
+
+
+#ifndef ZDEPTH_BUILD_STATIC
+#if defined(ZDEPTH_EXPORTS) || defined(zdepth_EXPORTS)
+#define ZDEPTH_EXPORT ZDEPTH_VISIBILITY_EXPORT
+#else
+#define ZDEPTH_EXPORT ZDEPTH_VISIBILITY_IMPORT
+#endif
+#else
+#define ZDEPTH_EXPORT ZDEPTH_VISIBILITY_STATIC
+#endif
+#define ZDEPTH_LOCAL ZDEPTH_VISIBILITY_LOCAL
+
 
 namespace zdepth {
 

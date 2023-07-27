@@ -62,9 +62,10 @@ add_library(zdepth ${SOURCE_FILES})
 add_library(zdepth::zdepth ALIAS zdepth)
 
 if (BUILD_SHARED_LIBS)
-  set_target_properties(zdepth PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_DLL")
+  set_target_properties(zdepth PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_EXPORTS")
   target_link_libraries(zdepth PUBLIC zstd::libzstd_shared)
 else()
+  set_target_properties(zdepth PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_BUILD_STATIC")
   target_link_libraries(zdepth PUBLIC zstd::libzstd_static)
 endif()
 
