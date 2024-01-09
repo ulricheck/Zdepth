@@ -1,0 +1,5 @@
+#pragma once
+
+#ifndef ZDEPTH_BUILD_STATIC
+#cmakedefine ZDEPTH_BUILD_STATIC 1
+#endif 

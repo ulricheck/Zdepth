@@ -40,11 +40,18 @@ endif()
 find_package(zstd REQUIRED)
 
 
+set(ZDEPTH_BUILD_STATIC ON)
+if (BUILD_SHARED_LIBS)
+    set(ZDEPTH_BUILD_STATIC OFF)
+endif()
+configure_file(${PROJECT_SOURCE_DIR}/include/zdepth_config.h.in ${CMAKE_BINARY_DIR}/include/zdepth_config.h @ONLY)
+
 ################################################################################
 # Source
 
 set(INCLUDE_FILES
     include/zdepth.hpp
+    ${CMAKE_BINARY_DIR}/include/zdepth_config.h
 )
 
 set(SOURCE_FILES
@@ -58,6 +65,7 @@ set(SOURCE_FILES
 
 # zdepth library
 
+
 add_library(zdepth ${SOURCE_FILES})
 add_library(zdepth::zdepth ALIAS zdepth)
 
@@ -65,14 +73,17 @@ if (BUILD_SHARED_LIBS)
   set_target_properties(zdepth PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_EXPORTS")
   target_link_libraries(zdepth PUBLIC zstd::libzstd_shared)
 else()
-  set_target_properties(zdepth PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_BUILD_STATIC")
   target_link_libraries(zdepth PUBLIC zstd::libzstd_static)
 endif()
 
 target_include_directories(zdepth PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include>"
+    PRIVATE
+    ${PROJECT_BINARY_DIR}/src
+    ${CMAKE_BINARY_DIR}/include
 )
+
 
 ################################################################################
 # Install
@@ -86,6 +97,7 @@ install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES README.md DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY cmake DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES include/zdepth.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES ${CMAKE_BINARY_DIR}/include/zdepth_config.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 
 # zdepth test application

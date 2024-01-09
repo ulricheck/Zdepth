@@ -27,6 +27,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include "zdepth_config.h"
 
 // Compiler-specific force inline keyword
 #if defined(_MSC_VER)
