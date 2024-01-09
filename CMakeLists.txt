@@ -66,7 +66,7 @@ set(SOURCE_FILES
 # zdepth library
 
 
-add_library(zdepth ${SOURCE_FILES})
+add_library(zdepth ${SOURCE_FILES} ${INCLUDE_FILES})
 add_library(zdepth::zdepth ALIAS zdepth)
 
 if (BUILD_SHARED_LIBS)
