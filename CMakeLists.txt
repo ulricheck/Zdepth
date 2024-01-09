@@ -105,6 +105,14 @@ install(FILES ${CMAKE_BINARY_DIR}/include/zdepth_config.h DESTINATION ${CMAKE_IN
 add_executable(zdepth_test tests/zdepth_test.cpp)
 target_link_libraries(zdepth_test PRIVATE zdepth)
 
+target_include_directories(zdepth_test
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_BINARY_DIR}/src
+        ${PROJECT_SOURCE_DIR}/src
+        ${CMAKE_BINARY_DIR}/include
+        )
+
 if (BUILD_SHARED_LIBS)
   target_link_libraries(zdepth_test PUBLIC zstd::libzstd_shared)
 else()
