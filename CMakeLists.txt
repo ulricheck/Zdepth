@@ -72,7 +72,13 @@ add_library(zdepth::zdepth ALIAS zdepth)
 if (BUILD_SHARED_LIBS)
   set_target_properties(zdepth PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_EXPORTS")
 endif()
-target_link_libraries(zdepth PUBLIC zstd::zstd)
+
+if (TARGET zstd::libzstd_static)
+  target_link_libraries(zdepth PUBLIC zstd::libzstd_static)
+else()
+  target_link_libraries(zdepth PUBLIC zstd::libzstd_shared)
+endif()
+
 
 target_include_directories(zdepth PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
