@@ -117,11 +117,13 @@ target_include_directories(zdepth_test
         ${CMAKE_BINARY_DIR}/include
         )
 
-if (BUILD_SHARED_LIBS)
-  target_link_libraries(zdepth_test PUBLIC zstd::libzstd_shared)
-else()
+if (ZDEPTH_BUILD_STATIC)
   set_target_properties(zdepth_test PROPERTIES COMPILE_DEFINITIONS "ZDEPTH_BUILD_STATIC")
-  target_link_libraries(zdepth_test PUBLIC zstd::libzstd_static)
 endif()
 
+if (TARGET zstd::libzstd_static)
+  target_link_libraries(zdepth_test PUBLIC zstd::libzstd_static)
+else()
+  target_link_libraries(zdepth_test PUBLIC zstd::libzstd_shared)
+endif()
 
